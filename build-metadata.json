@@ -1,0 +1,43 @@
+{
+  "pipelineVersion": "2.4.0",
+  "target": "android-apk-release",
+  "app": {
+    "name": "Red Fox",
+    "packageId": "com.redfox.ai",
+    "versionName": "1.0.0",
+    "versionCode": 1,
+    "orientation": "portrait"
+  },
+  "splash": {
+    "backgroundColor": "#09090b",
+    "showIcon": true,
+    "showSpinner": true,
+    "spinnerColor": "#f97316",
+    "durationMs": 2200,
+    "titleText": "Red Fox",
+    "showTitle": true,
+    "themeStyle": "dark"
+  },
+  "permissions": [
+    "android.permission.INTERNET",
+    "android.permission.CAMERA",
+    "android.permission.RECORD_AUDIO"
+  ],
+  "buildEnvironment": {
+    "minSdk": 24,
+    "targetSdk": 34,
+    "compileSdk": 34,
+    "gradlePlugin": "8.2.1",
+    "capacitor": "^6.0.0"
+  },
+  "signing": {
+    "alias": "release-key",
+    "algorithm": "RSA-2048",
+    "mode": "unaligned-unsigned-for-dev"
+  },
+  "source": {
+    "fileName": "RED_FOX_AI (45).html",
+    "fileSizeBytes": 793797,
+    "hasCustomLogo": true
+  }
+}
