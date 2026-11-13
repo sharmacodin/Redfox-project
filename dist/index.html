@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>/* v48 · old Android WebView polyfills (AbortSignal.timeout/any, speech shim) - no-ops on modern Chrome */
+(function(){try{
+if(typeof AbortSignal!=='undefined'){
+ if(!AbortSignal.timeout)AbortSignal.timeout=function(ms){var c=new AbortController();setTimeout(function(){try{c.abort(new DOMException('signal timed out','TimeoutError'))}catch(e){c.abort()}},ms);return c.signal};
+ if(!AbortSignal.any)AbortSignal.any=function(a){var c=new AbortController();for(var i=0;i<a.length;i++){var s=a[i];if(s.aborted){c.abort(s.reason);return c.signal}s.addEventListener('abort',function(){c.abort(this.reason)},{once:true})}return c.signal};
+}
+if(!('speechSynthesis' in window)){
+ window.__rfNoTTS=true;
+ window.SpeechSynthesisUtterance=window.SpeechSynthesisUtterance||function(t){this.text=String(t||'');this.lang='';this.rate=1;this.pitch=1;this.voice=null};
+ window.speechSynthesis={speaking:false,pending:false,paused:false,getVoices:function(){return[]},cancel:function(){this.speaking=false},pause:function(){},resume:function(){},onvoiceschanged:null,
+  speak:function(u){var s=this;s.speaking=true;setTimeout(function(){s.speaking=false;try{u.onend&&u.onend({})}catch(e){}},Math.min(6000,Math.max(600,(u.text||'').length*45)))}};
+}}catch(e){}})();</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#212121">
@@ -298,7 +310,7 @@ html.light .lib-code{background:#f3f3f6;border-color:#dcdce2}html.light .lib-cod
 .st-x{width:40px;height:40px;border-radius:50%;background:var(--hover);color:var(--text);font-size:18px;display:grid;place-items:center}
 .st-body{flex:1;overflow:auto;padding:18px 18px max(24px,env(safe-area-inset-bottom));font-size:17px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;outline:none;-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 .st-body,.st-body *{-webkit-user-select:text;user-select:text}
-/* ===== v18 · Design Studio, Library sub-chips, file-type icons ===== */
+/* ===== v18 · Library sub-chips, file-type icons ===== */
 .fi{display:inline-flex;flex:none;vertical-align:middle}.fi svg{display:block}
 .file-chip{align-items:center;gap:9px;padding:6px 8px 6px 6px}.file-chip .fi{margin:0}.file-chip .fthumb{width:34px;height:34px;border-radius:8px;object-fit:cover;flex:none;background:#333}
 .file-chip .fmeta{display:flex;flex-direction:column;min-width:0;line-height:1.2}.file-chip .fmeta span{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.file-chip .fmeta small{font-size:10.5px;opacity:.65}
@@ -312,29 +324,10 @@ html.light .lib-code{background:#f3f3f6;border-color:#dcdce2}html.light .lib-cod
 .lib-item .dur{position:absolute;right:5px;bottom:5px;padding:1px 5px;border-radius:5px;background:#000c;color:#fff;font:600 10px/1.5 Inter,system-ui,sans-serif;font-style:normal;z-index:2}
 .lib-grid.wp{column-gap:9px}.lib-grid.wp .lib-item{border-radius:18px;margin-bottom:9px;box-shadow:0 6px 20px #0006}.lib-grid.wp .lib-item small{display:none}
 .lib-grid.bn .lib-item{border-radius:10px}
-.lib-dsbtn{display:flex;gap:8px}.lib-dsbtn .pbtn{margin-top:0}
 /* v19 sticky Library bar + search */
 .lib-bar{position:sticky;top:0;z-index:12;background:var(--bg);margin:0 -16px 6px;padding:6px 16px 2px;box-shadow:0 1px 0 var(--line)}.lib-bar .lib-tabs{padding-bottom:8px}.lib-bar .lib-sub{padding-bottom:8px}
 .lib-search{display:flex;gap:8px;margin:0 0 8px}.lib-search[hidden]{display:none}.lib-search input{flex:1;min-width:0;padding:10px 14px;border-radius:99px;border:1px solid var(--line);background:#ffffff0f;color:var(--text);font-size:15px;outline:none;-webkit-user-select:text;user-select:text}.lib-search input:focus{border-color:var(--accent)}.lib-search button{flex:none;padding:0 16px;border-radius:99px;border:0;background:var(--accent);color:#1a0f05;font-weight:650}html.light .lib-search input{background:#00000008}
 .lib-item{isolation:isolate;transform:translateZ(0)}
-.ds-ov{z-index:95}
-.ds-wrap{width:min(100%,760px);margin:0 auto;padding:12px 14px 60px}
-.ds-wrap h3{margin:16px 2px 8px;font-size:13px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted)}
-.ds-fmts{display:flex;gap:7px;flex-wrap:wrap}.ds-fmts button,.ds-chips button{padding:8px 12px;border-radius:99px;border:1px solid var(--line);background:#ffffff0d;font-size:13px}
-.ds-fmts button.on,.ds-chips button.on{background:var(--accent);border-color:var(--accent);color:#1a0f05;font-weight:650}
-.ds-chips{display:flex;gap:7px;flex-wrap:wrap}
-.ds-in{width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:#ffffff0a;color:var(--text);resize:vertical;min-height:84px;font-size:14.5px}
-.ds-row{display:flex;gap:8px;align-items:stretch;margin-top:8px}.ds-row>*{flex:1}
-.ds-ref{display:flex;align-items:center;gap:10px;padding:8px;border:1px dashed var(--line);border-radius:12px;min-height:58px;font-size:13px;color:var(--muted)}
-.ds-ref img{width:84px;height:52px;object-fit:cover;border-radius:8px}.ds-ref button{margin-left:auto;padding:6px 10px;border-radius:9px;background:#ffffff14;font-size:12px}
-.ds-stage{margin-top:14px;border-radius:14px;overflow:hidden;background:repeating-conic-gradient(#2a2a2a 0 25%,#222 0 50%) 0 0/18px 18px;display:grid;place-items:center;position:relative;min-height:120px}
-.ds-stage canvas{display:block;max-width:100%;max-height:70vh;height:auto;width:auto}
-.ds-stat{margin-top:8px;font-size:12.5px;color:var(--muted);min-height:18px;white-space:pre-line}
-.ds-sel{min-height:0;height:46px;padding:0 12px}.ds-note{margin-top:6px;font-size:12px;color:var(--muted);line-height:1.45}
-.ds-edit{display:grid;gap:7px}.ds-edit label{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted)}.ds-edit input{flex:1;padding:8px 10px;border-radius:9px;border:1px solid var(--line);background:#ffffff0a;color:var(--text);font-size:14px}
-.ds-act{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.ds-act .pbtn{margin-top:0}
-html.light .ds-in,html.light .ds-edit input{background:#00000008}html.light .ds-fmts button,html.light .ds-chips button{background:#00000008}
-.ds-stage[hidden],#dsAfter[hidden]{display:none!important}
 
 /* ===== v19 · list spacing, long-prompt toggle, scroll smoothness ===== */
 .msg-text ol{padding-left:28px}.msg-text li>ul,.msg-text li>ol{margin:4px 0 2px}.msg-text li{padding-left:2px}
@@ -387,9 +380,15 @@ html.light #rfJump{background:rgba(255,255,255,.5);color:#171717;border-color:rg
 html.light .side-link.active{background:#ececef;color:#18181b}
 
 /* ===== v23 · project file dropdown, long-press menu ===== */
-.pjn-wrap{position:relative}.pjn-wrap .ci-box{margin-bottom:0;min-height:0;height:50px;padding:0 96px 0 14px}
-.pjn-dd{position:absolute;right:7px;top:7px;height:36px;display:flex;align-items:center;gap:6px;padding:0 10px;border-radius:10px;background:#ffffff14;color:var(--text);font-size:13px;font-weight:700}
-.pjn-dd svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}.pjn-dd[aria-expanded="true"] svg{transform:rotate(180deg)}
+.pjn-wrap{position:relative}.pjn-wrap .ci-box{margin-bottom:0;min-height:0;height:50px;padding:0 14px}
+.pjrow{margin-bottom:10px}.pjrow-h{position:relative}.pjrow-h>.pf-btn{margin-bottom:0}.pjrow-h>.pf-btn>span:first-child{margin-right:64px}
+.pjr-ic{font-style:normal;flex:none;margin-right:10px}.pjr-tx{display:flex;flex-direction:column;gap:3px;min-width:0}.pjr-tx b{font-weight:inherit;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pjr-tx small{display:block;margin:0;line-height:1.2}
+#pjItems .pf-btn>span:first-child{display:flex;align-items:center;min-width:0}
+.pjr-dd{position:absolute;right:42px;top:50%;transform:translateY(-50%);height:38px;min-width:46px;display:flex;align-items:center;justify-content:center;gap:2px;padding:0 8px;border-radius:10px;background:#ffffff14;color:var(--text);font-size:12.5px;font-weight:700}
+html.light .pjr-dd{background:#0000000d}
+.pjr-dd svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}.pjr-dd[aria-expanded="true"] svg{transform:rotate(180deg)}
+.pjrow .pjn-list{margin:6px 0 0}
+.pjn-row .pjn-tx{display:flex;flex-direction:column;min-width:0;flex:1;gap:1px}.pjn-row .pjn-tx small{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pjn-list{margin:8px 0 12px;border:1px solid var(--line);border-radius:14px;background:var(--panel2);max-height:42vh;overflow:auto}.pjn-list[hidden]{display:none}
 .pjn-row{display:flex;align-items:center;gap:11px;padding:9px 12px;width:100%;text-align:left;background:transparent;border-bottom:1px solid var(--line)}.pjn-row:last-child{border-bottom:0}
 .pjn-row .fi{display:inline-flex;flex:none}.pjn-row>svg{flex:none}.pjn-row b{flex:1;min-width:0;font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -402,7 +401,6 @@ html.light .side-link.active{background:#ececef;color:#18181b}
 .pjm-b svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}.pjm-b.danger{color:#f87171}
 .pjm-box .ci-box{margin:6px 0 10px;min-height:0}.pjm-row{display:flex;gap:8px}.pjm-row .pbtn{margin-top:0}
 .pj-pin{width:15px;height:15px;fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px;margin-right:8px}
-html.light .pjn-dd{background:#0000000d}
 
 /* ===== v24 · new-chat mascot ===== */
 .fox-mascot{width:128px;height:128px;margin-bottom:-4px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
@@ -677,8 +675,8 @@ html.light .msg-text .tbl td:first-child,html.light .msg-text .edu .tbl td:first
    Only the text area grows with the text. Keyboard hidden => 1-line collapsed box (class rf-cmp).
    Coding / Web buttons are hidden here (still in the + menu; their state + badges stay in sync). */
 #codingToggle,#webToggle{display:none!important}
-.composer{display:flex;flex-wrap:wrap;align-items:flex-end;gap:2px;padding:5px 7px 5px 9px;min-height:52px;border-radius:26px;background:#333;border:1px solid #4b4b4b;box-shadow:none;transition:border-color .15s ease}
-.composer:focus-within{background:#333;border-color:#5c5c5c;box-shadow:none}
+.composer{display:flex;flex-wrap:wrap;align-items:flex-end;gap:2px;padding:5px 7px 5px 9px;min-height:52px;border-radius:26px;background:rgba(51,51,51,.55);-webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%);border:1px solid #ffffff26;box-shadow:0 6px 24px #0000002e;transition:border-color .15s ease,background .15s ease}
+.composer:focus-within{background:rgba(51,51,51,.68);border-color:#ffffff40;box-shadow:0 6px 24px #0000002e}
 .composer .composer-bottom,.composer .composer-left,.composer .composer-right{display:contents}
 .composer #plusButton{order:0;flex:0 0 auto;width:40px;height:40px;color:#fff}
 .composer #plusButton svg{width:26px;height:26px;stroke-width:1.7}
@@ -695,7 +693,7 @@ html.light .composer #voiceButton.mic-on,.app.light .composer #voiceButton.mic-o
 #activeModeBadges{order:-1;flex:0 0 100%;padding:2px 6px 4px!important}
 .composer:not(.rf-hb) #activeModeBadges{display:none!important}
 .composer.rf-cmp #promptInput{height:34px!important;max-height:34px;overflow:hidden}
-html.light .composer,.app.light .composer{background:#f1f1f4;border-color:#d4d4dc;box-shadow:none}
+html.light .composer,.app.light .composer{background:rgba(241,241,244,.6);border-color:#00000024;box-shadow:0 6px 20px #0000000f}
 html.light .composer:focus-within,.app.light .composer:focus-within{background:#f1f1f4;border-color:#b6b6c0;box-shadow:none}
 html.light .composer #plusButton,html.light .composer #voiceButton,.app.light .composer #plusButton,.app.light .composer #voiceButton{color:#27272a}
 html.light .composer #promptInput::placeholder,.app.light .composer #promptInput::placeholder{color:#8a8a92}
@@ -807,6 +805,7 @@ button.fcx-chip.on{color:#1a0f05;background:#f97316;border-color:#f97316}
 @media (min-width:760px){.fcx-main{padding:20px 18px}.fcx-stage{width:520px}}
 @media (prefers-reduced-motion:reduce){.fcx-inner{transition-duration:.01s}.fcx-card,.fcx-card.fcx-in,.fcx-ov.show,.fcx-done{animation:none;transition-duration:.01s}}
 </style>
+<style id="apk-clipboard-fix">input, textarea, [contenteditable="true"] { -webkit-user-select: text !important; user-select: text !important; }</style>
 </head>
 <body>
 <div class="app" id="app">
@@ -1169,18 +1168,26 @@ function dictUI(on){const b=$('#voiceButton');if(!b)return;b.classList.toggle('m
 $('#voiceButton').onclick=async()=>{
  if(dictRec){try{dictRec.stop()}catch(e){dictRec=null;dictUI(false)}return}
  if(dictBusy)return;
- const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!window.isSecureContext){toast('Mic needs HTTPS or localhost; file:// may be blocked.');return}if(!SR){toast('Speech recognition unsupported. Try updated Chrome/Edge.');return}
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(rfSttUseRec()){rfDictRec();return}if(!SR){toast('Speech recognition unsupported. Try updated Chrome/Edge.');return}
  dictBusy=true;
  try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});stream.getTracks().forEach(t=>t.stop());
   const rec=new SR();dictRec=rec;rec.lang='en-IN';rec.interimResults=false;
   rec.onresult=e=>{promptInput.value+=(promptInput.value?' ':'')+e.results[0][0].transcript;resizeInput();syncSend()};
-  rec.onerror=e=>toast(e.error==='not-allowed'?'Allow Microphone in site settings, then reload.':'Voice input failed: '+e.error);
+  rec.onerror=e=>{if((e.error==='service-not-allowed'||e.error==='network'||e.error==='language-not-supported')&&rfRecOK()){RFENV.forceRec=true;dictRec=null;dictUI(false);rfDictRec();return}toast(e.error==='not-allowed'?'Allow Microphone in site settings, then reload.':'Voice input failed: '+e.error)};
   rec.onend=()=>{if(dictRec===rec)dictRec=null;dictUI(false)};
   rec.start();dictUI(true);toast('Listening…')
- }catch(e){dictRec=null;dictUI(false);toast(e?.name==='NotAllowedError'?'Microphone blocked: allow it in browser site settings.':'Microphone unavailable. Check permissions and try again.')}
+ }catch(e){dictRec=null;dictUI(false);toast(rfMicMsg(e))}
  finally{dictBusy=false}
 };
 
+async function rfDictRec(){let h;dictBusy=true;
+ try{h=await rfRecStart({silenceMs:1800,waitMs:10000,maxMs:60000})}catch(e){dictBusy=false;dictUI(false);toast(rfMicMsg(e));return}
+ dictRec=h;dictBusy=false;dictUI(true);toast('Listening… bolo');
+ const r=await h.done;if(dictRec===h)dictRec=null;
+ if(!r){dictUI(false);return}if(!r.heard){dictUI(false);toast('Awaaz nahi suni.');return}
+ dictBusy=true;toast('Transcribing…');
+ try{const s=(await rfTranscribe(r.blob)).trim();if(s){promptInput.value+=(promptInput.value?' ':'')+s;resizeInput();syncSend()}else toast('Kuch sunai nahi diya.')}catch(e){toast(String(e&&e.message||e).slice(0,140))}
+ finally{dictBusy=false;dictUI(false)}}
 // ===== ROUND 3: copy helpers, exact-selection copy, code-block copy, long-press edit =====
 async function copyText(t){try{await navigator.clipboard.writeText(t);return true}catch{const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0;top:0';document.body.appendChild(a);a.focus();a.select();let ok=false;try{ok=document.execCommand('copy')}catch{}a.remove();return ok}}
 // [2] Copy exactly what is selected (nothing more)
@@ -1347,6 +1354,51 @@ const WAVE_SVG='<svg viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4v16M16 7v10
 function syncSend(){if(busy){sendButton.dataset.voice='';sendButton.innerHTML=STOP_SVG;sendButton.title='Stop';return}if(promptInput.value.trim()||pendingFiles.length){sendButton.dataset.voice='';sendButton.innerHTML=SEND_SVG;sendButton.title='Send'}else if(!profile.perm){sendButton.dataset.voice='';sendButton.innerHTML=SEND_SVG;sendButton.title='Send'}else{sendButton.dataset.voice='1';sendButton.innerHTML=WAVE_SVG;sendButton.title='Voice mode'}}
 promptInput.addEventListener('input',syncSend);
 const _ra=renderAttachments;renderAttachments=function(){_ra.apply(this,arguments);syncSend()};
+/* ===== v48 · APK / WebView: speech-to-text fallback. Chrome keeps the built-in Web Speech API; Android WebView has none,
+   so there we record the mic (WAV 16 kHz) with silence detection and transcribe it with the Gemini (or OpenAI) key already saved in Settings ===== */
+const RFENV={wv:/;\s*wv\)|\bwv\b|Capacitor|Cordova/i.test(navigator.userAgent)||!!(window.Capacitor||window.cordova),forceRec:false};
+const rfSR=()=>window.SpeechRecognition||window.webkitSpeechRecognition;
+const rfRecOK=()=>!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&(window.AudioContext||window.webkitAudioContext));
+const rfSttUseRec=()=>rfRecOK()&&(RFENV.forceRec||RFENV.wv||!rfSR());
+function rfMicMsg(e){const n=e&&e.name||'';
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return'Is app/browser me microphone API nahi mili. Page https:// ya localhost se kholo; APK me WebView ka microphone permission chahiye.';
+ if(n==='NotAllowedError'||n==='PermissionDeniedError'||n==='SecurityError')return RFENV.wv?'Microphone permission nahi mili. Phone Settings > Apps > RED FOX AI > Permissions > Microphone = Allow. (APK me RECORD_AUDIO permission aur WebView ka mic grant bhi chahiye.)':'Microphone blocked hai: address bar ke lock icon se Microphone Allow karke page reload karo.';
+ if(n==='NotFoundError')return'Microphone nahi mila. Mic connect/enable karke dobara try karo.';
+ if(n==='NotReadableError')return'Microphone kisi aur app me chal raha hai. Use band karke dobara try karo.';
+ return'Microphone start nahi hua ('+(n||'error')+'). Permissions check karo.'}
+function rfWav(chunks,rate){let n=0;chunks.forEach(c=>n+=c.length);const all=new Float32Array(n);let o=0;chunks.forEach(c=>{all.set(c,o);o+=c.length});
+ const to=16000,ratio=rate/to,len=Math.max(1,Math.floor(n/ratio)),pcm=new Int16Array(len);
+ for(let i=0;i<len;i++){const a=Math.floor(i*ratio),b=Math.min(n,Math.floor((i+1)*ratio));let s=0,k=0;for(let j=a;j<b;j++){s+=all[j];k++}const v=Math.max(-1,Math.min(1,k?s/k:0));pcm[i]=v<0?v*32768:v*32767}
+ const buf=new ArrayBuffer(44+len*2),dv=new DataView(buf),w=(off,s)=>{for(let i=0;i<s.length;i++)dv.setUint8(off+i,s.charCodeAt(i))};
+ w(0,'RIFF');dv.setUint32(4,36+len*2,true);w(8,'WAVE');w(12,'fmt ');dv.setUint32(16,16,true);dv.setUint16(20,1,true);dv.setUint16(22,1,true);dv.setUint32(24,to,true);dv.setUint32(28,to*2,true);dv.setUint16(32,2,true);dv.setUint16(34,16,true);w(36,'data');dv.setUint32(40,len*2,true);
+ for(let i=0;i<len;i++)dv.setInt16(44+i*2,pcm[i],true);return new Blob([buf],{type:'audio/wav'})}
+async function rfRecStart(o){o=o||{};
+ const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});
+ const AC=window.AudioContext||window.webkitAudioContext,ac=new AC();try{await ac.resume()}catch{}
+ const src=ac.createMediaStreamSource(stream),pr=ac.createScriptProcessor(4096,1,1),mute=ac.createGain();mute.gain.value=0;
+ const chunks=[],rate=ac.sampleRate,t0=Date.now();let heard=false,last=t0,ended=false,noise=0,cal=0,res;
+ const done=new Promise(r=>res=r);
+ const finish=ab=>{if(ended)return;ended=true;try{pr.onaudioprocess=null;pr.disconnect();src.disconnect();mute.disconnect()}catch{}stream.getTracks().forEach(x=>x.stop());try{ac.close()}catch{}res(ab?null:{blob:rfWav(chunks,rate),heard})};
+ pr.onaudioprocess=e=>{if(ended)return;const c=new Float32Array(e.inputBuffer.getChannelData(0));chunks.push(c);let s=0;for(let i=0;i<c.length;i++)s+=c[i]*c[i];const rms=Math.sqrt(s/c.length);
+  if(cal<4){noise=Math.max(noise,rms);cal++;return}
+  const now=Date.now();if(rms>Math.max(.015,noise*2.6)){heard=true;last=now}
+  if(heard&&now-last>(o.silenceMs||1400))finish(false);else if(!heard&&now-t0>(o.waitMs||9000))finish(false);else if(now-t0>(o.maxMs||45000))finish(false)};
+ src.connect(pr);pr.connect(mute);mute.connect(ac.destination);
+ return{stop:()=>finish(false),abort:()=>finish(true),done}}
+async function rfTranscribe(blob){
+ const b64=await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]);r.onerror=no;r.readAsDataURL(blob)});
+ const gk=(((settings.keys&&settings.keys.gemini)||(/generativelanguage/.test(settings.baseUrl||'')?settings.apiKey:'')||'')+'').trim(),ok=((settings.keys&&settings.keys.openai)||'').trim(),errs=[];
+ if(gk){const cm=String(settings.chatModel||'').trim(),models=[...new Set([/^gemini/i.test(cm)?cm:'','gemini-2.5-flash','gemini-2.0-flash'].filter(Boolean))];
+  for(const m of models){try{
+   const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(m)+':generateContent',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':gk},signal:AbortSignal.timeout(45000),
+    body:JSON.stringify({contents:[{parts:[{text:'Transcribe this speech exactly as spoken. It may be Hindi (write Devanagari), Hinglish (write Roman letters as spoken) or English. Return ONLY the transcript text, with no quotes or commentary. If there is no clear speech, return an empty string.'},{inline_data:{mime_type:'audio/wav',data:b64}}]}],generationConfig:{temperature:0}})});
+   const d=await r.json().catch(()=>({}));if(!r.ok){errs.push((d&&d.error&&d.error.message)||'HTTP '+r.status);if(r.status===401||r.status===403)break;continue}
+   return((d.candidates&&d.candidates[0]&&d.candidates[0].content&&d.candidates[0].content.parts||[]).map(x=>x.text||'').join(' ')).trim()}catch(e){errs.push(e&&e.name==='TimeoutError'?'timeout':String(e&&e.message||e))}}}
+ if(ok){try{const fd=new FormData();fd.append('file',blob,'speech.wav');fd.append('model','whisper-1');
+   const r=await fetch('https://api.openai.com/v1/audio/transcriptions',{method:'POST',headers:{Authorization:'Bearer '+ok},body:fd,signal:AbortSignal.timeout(45000)});
+   const d=await r.json().catch(()=>({}));if(r.ok)return String(d.text||'').trim();errs.push((d&&d.error&&d.error.message)||'HTTP '+r.status)}catch(e){errs.push(String(e&&e.message||e))}}
+ if(!gk&&!ok)throw new Error('Voice ko text banane ke liye Gemini API key chahiye: Profile > API settings me key daalo.');
+ throw new Error('Voice text nahi ban payi: '+(errs[0]||'network error').slice(0,120))}
 // Voice mode
 function setOrb(st){$('#orb').className='orb '+st}
 function openVoice(){if(localStorage.getItem('redfox_mic')==='always')startVoice();else openOverlay('permOverlay')}
@@ -1356,19 +1408,26 @@ $('#permDeny').onclick=()=>{closeOverlay('permOverlay');toast('Microphone not al
 async function startVoice(){
  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
  voiceOn=true;vBlocked=false;$('#voiceOv').classList.add('show');setOrb('listening');
- if(!window.isSecureContext){$('#voiceText').textContent='Microphone needs a secure website. Open this app from HTTPS or localhost (not file://). Then allow Microphone in browser site settings and try again.';vBlocked=true;return}
- if(!navigator.mediaDevices?.getUserMedia){$('#voiceText').textContent='This browser does not expose microphone access. Try updated Chrome or Edge over HTTPS.';vBlocked=true;return}
+  if(!navigator.mediaDevices?.getUserMedia){$('#voiceText').textContent=rfMicMsg();vBlocked=true;return}
  try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});stream.getTracks().forEach(t=>t.stop())}
- catch(e){vBlocked=true;const msg=e?.name==='NotAllowedError'||e?.name==='PermissionDeniedError'?'Microphone permission is blocked. Tap the lock/site-settings icon beside the address bar, set Microphone to Allow, reload the page, then try again.':e?.name==='NotFoundError'?'No microphone was found. Connect or enable a microphone and try again.':'Microphone could not start ('+(e?.name||'error')+'). Check browser permissions and close other apps using the mic.';$('#voiceText').textContent=msg;return}
- if(!SR){vBlocked=true;$('#voiceText').textContent='Microphone access works, but speech recognition is not supported here. Try updated Chrome or Edge with internet access.';return}
+ catch(e){vBlocked=true;$('#voiceText').textContent=rfMicMsg(e);return}
+ if(!SR&&!rfRecOK()){vBlocked=true;$('#voiceText').textContent='Speech recognition is not supported here. Try updated Chrome or Edge with internet access.';return}
  $('#voiceText').textContent='Listening…';vListen()
 }
 function stopVoice(){voiceOn=false;vTok++;try{vRec&&vRec.abort()}catch{}speechSynthesis.cancel();$('#voiceOv').classList.remove('show')}
-function vListen(){if(!voiceOn)return;setOrb('listening');const SR=window.SpeechRecognition||window.webkitSpeechRecognition;vRec=new SR();vRec.lang=vLang;vRec.interimResults=true;let fin='';
+function vListen(){if(!voiceOn)return;setOrb('listening');if(rfSttUseRec())return vListenRec();const SR=window.SpeechRecognition||window.webkitSpeechRecognition;vRec=new SR();vRec.lang=vLang;vRec.interimResults=true;let fin='';
  vRec.onresult=e=>{let t='';for(const r of e.results)t+=r[0].transcript;$('#voiceText').textContent=t;if(e.results[e.results.length-1].isFinal)fin=t};
  vRec.onend=()=>{if(!voiceOn||vBlocked)return;if(fin.trim())vAsk(fin.trim());else setTimeout(vListen,300)};
- vRec.onerror=ev=>{if(ev.error==='not-allowed'||ev.error==='service-not-allowed'){vBlocked=true;setOrb('thinking');$('#voiceText').textContent='Microphone is blocked. Tap the lock icon in the address bar, allow Microphone, then tap the orb. (Use https or localhost; a local file may be blocked.)'}};
+ vRec.onerror=ev=>{if((ev.error==='service-not-allowed'||ev.error==='network'||ev.error==='language-not-supported')&&rfRecOK()){RFENV.forceRec=true;setTimeout(vListen,200);return}if(ev.error==='not-allowed'||ev.error==='service-not-allowed'){vBlocked=true;setOrb('thinking');$('#voiceText').textContent='Microphone is blocked. Tap the lock icon in the address bar, allow Microphone, then tap the orb. (Use https or localhost; a local file may be blocked.)'}};
  try{vRec.start()}catch{}}
+async function vListenRec(){try{vRec&&vRec.abort&&vRec.abort()}catch{}
+ let h;try{h=await rfRecStart({silenceMs:1300,waitMs:9000,maxMs:30000})}catch(e){vBlocked=true;setOrb('thinking');$('#voiceText').textContent=rfMicMsg(e);return}
+ vRec=h;$('#voiceText').textContent='Listening…';
+ const r=await h.done;if(!voiceOn||vRec!==h||!r)return;
+ if(!r.heard){setTimeout(vListen,250);return}
+ setOrb('thinking');$('#voiceText').textContent='Samajh raha hoon…';
+ let txt='';try{txt=await rfTranscribe(r.blob)}catch(e){if(!voiceOn)return;vBlocked=true;$('#voiceText').textContent=String(e&&e.message||e);return}
+ if(!voiceOn)return;if(txt)vAsk(txt);else setTimeout(vListen,250)}
 async function vAsk(t){setOrb('thinking');promptInput.value=t;await sendMessage();if(!voiceOn)return;const m=(currentChat()?.messages||[]).slice(-1)[0];if(m&&m.role==='assistant')vSpeak(m.content);else vListen()}
 let vTok=0;
 function vSpeakChunks(clean,vc){
@@ -1481,11 +1540,10 @@ function voiceFor(lang,name,g){
   return{v:v||null,pitch:p[0],rate:p[1]};
 }
 function pickVoice(){const n=profile.vsel,g=VG.find(x=>x[3].some(v=>v[0]===n));if(n&&g&&g[2]===vLang)return voiceFor(vLang,n,g[3].find(v=>v[0]===n)[1]);const r=pickVoice0();r.rate=1;return r}
-function renderVs(){$('#vsList').innerHTML=VG.map(g=>'<div class="vs-sec"><div class="pf-row vs-head"><span>'+g[1]+'</span><span><button class="pf-mini" data-vdl="'+g[2]+'" aria-label="Download voice">⬇</button><span class="chev">›</span></span></div><div class="vs-list" hidden>'+g[3].map(v=>'<button class="pf-btn" data-vn="'+v[0]+'" data-vg="'+g[0]+'"><span>'+v[0]+'<small>'+(v[1]==='m'?'Boy':'Girl')+' · '+g[1]+'</small></span><span class="tick">'+(profile.vsel===v[0]?'✓':'')+'</span></button>').join('')+'</div></div>').join('')}
+function renderVs(){$('#vsList').innerHTML=VG.map(g=>'<div class="vs-sec"><div class="pf-row vs-head"><span>'+g[1]+'</span><span><span class="chev">›</span></span></div><div class="vs-list" hidden>'+g[3].map(v=>'<button class="pf-btn" data-vn="'+v[0]+'" data-vg="'+g[0]+'"><span>'+v[0]+'<small>'+(v[1]==='m'?'Boy':'Girl')+' · '+g[1]+'</small></span><span class="tick">'+(profile.vsel===v[0]?'✓':'')+'</span></button>').join('')+'</div></div>').join('')}
 function syncVoiceSw(){$('#saveSw').checked=profile.saveVoice!==false;$('#notSw').checked=!!profile.notify;$('#redSw').checked=!!profile.reduce}
-$('#pg-voice').addEventListener('click',e=>{const n=e.target.closest('[data-vn]'),d=e.target.closest('[data-vdl]'),h=e.target.closest('.vs-head');
+$('#pg-voice').addEventListener('click',e=>{const n=e.target.closest('[data-vn]'),h=e.target.closest('.vs-head');
  if(n){const g=VG.find(x=>x[0]===n.dataset.vg),v=g[3].find(x=>x[0]===n.dataset.vn);profile.vsel=v[0];profile.vlang=g[2];saveProfile();document.querySelectorAll('[data-vn]').forEach(b=>{b.querySelector('.tick').textContent=profile.vsel===b.dataset.vn?'✓':''});setLang(g[2]);speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(SAMPLE[g[2]](v[0])),vc=voiceFor(g[2],v[0],v[1]);u.lang=g[2];if(vc.v)u.voice=vc.v;u.pitch=vc.pitch;u.rate=vc.rate;speechSynthesis.speak(u);return}
- if(d){const has=speechSynthesis.getVoices().some(v=>v.lang.toLowerCase().startsWith(d.dataset.vdl.slice(0,2)));toast(has?'Voice already installed on this device.':'Install this language voice: Phone Settings > Text-to-speech output > Install voice data.');return}
  if(h){h.nextElementSibling.hidden=!h.nextElementSibling.hidden;h.classList.toggle('open')}});
 $('#profileOv').addEventListener('click',e=>{if(e.target.closest('[data-go="voice"],[data-go="safe"]')){renderVs();syncVoiceSw()}});
 $('#saveSw').onchange=e=>{profile.saveVoice=e.target.checked;saveProfile();toast(profile.saveVoice?'Voice chats are saved':'Voice chats will not be saved')};
@@ -2650,270 +2708,6 @@ const _libTile19=libTile;
 libTile=function(it,i,cat){return _libTile19(it,i,cat).replace(' loading="lazy"','')};
 new MutationObserver(()=>{$$('#libGrid .lib-item:not(.ok) img').forEach(im=>{if(im.complete&&im.naturalWidth>0){im.classList.add('ld');im.parentElement.classList.add('ok')}})}).observe($('#libGrid'),{childList:true});
 
-/* ===== v18 · DESIGN STUDIO: reference image/PDF → editable design → PNG / JPG / PDF ===== */
-/* v45: image engines rebuilt — keyless Puter AI + AI Horde, honest Canvas template fallback (see 'images: keyless engines') */
-const DS_FMTS=[
- {k:'thumb',n:'YT Thumbnail',w:1280,h:720,hint:'YouTube thumbnail 16:9. One huge 2-5 word title, an expressive subject (face/object) on one side, strong contrast, glow/outline/arrow/ring accents like top documentary & business channels.'},
- {k:'banner',n:'YT Banner',w:2560,h:1440,hint:'YouTube channel banner. ALL important content (channel name, tagline) MUST stay inside the central safe area x 20-80 and y 35-65. Left/right/top/bottom may only hold decoration.'},
- {k:'wall',n:'Wallpaper',w:1080,h:2400,hint:'Premium phone wallpaper like a theme-store: rich gradients, depth, glow, clean negative space for clock/icons (keep top 30% and bottom 15% calm), little or no text.'},
- {k:'sign',n:'Signboard',w:3000,h:1000,hint:'Shop signboard / storefront banner 3:1. Big readable shop name, short tagline, contact strip, bold colors, readable from far away.'},
- {k:'post',n:'Insta Post',w:1080,h:1350,hint:'Instagram post 4:5 with a clear focal point, headline and small supporting line.'},
- {k:'poster',n:'Poster / PDF',w:1240,h:1754,hint:'A4 portrait poster or flyer with headline, sub-headline, body points and a footer strip. Suitable for PDF print.'},
- {k:'logo',n:'Logo',w:1024,h:1024,hint:'Square logo: a simple bold mark built from shapes plus the brand name, centered, flat colors.'}];
-const DS_STYLES=['Documentary','Business','Education','Finance','Gaming','Luxury','Neon','Minimal','Festival','Corporate'];
-const DS_FONTS={anton:['Anton, Impact, "Arial Black", sans-serif',400],bebas:['"Bebas Neue", Impact, sans-serif',400],oswald:['Oswald, "Arial Narrow", sans-serif',700],montserrat:['Montserrat, "Segoe UI", Arial, sans-serif',900],playfair:['"Playfair Display", Georgia, serif',900],marker:['"Permanent Marker", "Comic Sans MS", cursive',400],sans:['Inter, system-ui, Arial, sans-serif',800]};
-const DS_BLANK=(()=>{const c=document.createElement('canvas');c.width=c.height=64;const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,64,64);return c.toDataURL('image/png')})();
-const ds={eng:'auto',errs:{},miss:0,fmt:DS_FMTS[0],style:'',ref:null,photo:null,photoImg:null,spec:null,imgs:new Map(),busy:false,ab:null,built:false,fonts:null,raf:0};
-const dsN=(v,a,b,d)=>{v=parseFloat(v);return Number.isFinite(v)?Math.min(b,Math.max(a,v)):d};
-const dsC=(v,d)=>(typeof v==='string'&&v.length<48&&CSS.supports('color',v))?v:d;
-const _dsT=document.createElement('canvas').getContext('2d');
-function dsRGB(c){_dsT.fillStyle='#000';_dsT.fillStyle=c;const v=_dsT.fillStyle;if(v[0]==='#')return[parseInt(v.slice(1,3),16),parseInt(v.slice(3,5),16),parseInt(v.slice(5,7),16)];const m=v.match(/[\d.]+/g)||[0,0,0];return[+m[0],+m[1],+m[2]]}
-const dsA=(c,a)=>{const q=dsRGB(c);return'rgba('+q[0]+','+q[1]+','+q[2]+','+a+')'};
-const dsLoad=src=>new Promise(ok=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>ok(null);i.src=src});
-function dsParse(t){t=String(t).replace(/<think>[\s\S]*?(<\/think>|$)/gi,'');const a=t.indexOf('{'),b=t.lastIndexOf('}');if(a<0||b<=a)throw new Error('AI ne JSON nahi diya');let s=t.slice(a,b+1);try{return JSON.parse(s)}catch{s=s.replace(/,\s*([}\]])/g,'$1').replace(/[\u201c\u201d]/g,'"');return JSON.parse(s)}}
-function dsNorm(s){s=s&&typeof s==='object'?s:{};const bg=s.bg&&typeof s.bg==='object'?s.bg:{};
- const cols=(Array.isArray(bg.colors)?bg.colors:[]).map(c=>dsC(c,null)).filter(Boolean).slice(0,4);while(cols.length<2)cols.push(cols.length?'#111827':'#0b0b10');
- const out={bg:{colors:cols,angle:dsN(bg.angle,0,360,135),image:typeof bg.image==='string'&&bg.image.length>8?bg.image.slice(0,400):null,dim:dsN(bg.dim,0,.85,0),vignette:dsN(bg.vignette,0,.9,.35),glows:(Array.isArray(bg.glows)?bg.glows:[]).slice(0,5).filter(g=>g&&typeof g==='object').map(g=>({x:dsN(g.x,-20,120,50),y:dsN(g.y,-20,120,50),r:dsN(g.r,5,150,50),c:dsC(g.c,'#ff6a00'),a:dsN(g.a,0,1,.5)}))},layers:[]};
- let ni=0;
- for(const L of(Array.isArray(s.layers)?s.layers:[]).slice(0,24)){if(!L||typeof L!=='object')continue;const t=String(L.t||L.type||'').toLowerCase(),b={x:dsN(L.x,-60,160,0),y:dsN(L.y,-60,160,0),w:dsN(L.w,0,220,20),h:dsN(L.h,0,220,20),rot:dsN(L.rot,-180,180,0)};
-  if(t==='text'&&L.text){const st=dsC(L.stroke,null);out.layers.push({t:'text',x:b.x,y:b.y,w:L.w?b.w:60,h:L.h?b.h:0,rot:b.rot,text:String(L.text).slice(0,160),size:dsN(L.size,1.5,60,9),font:DS_FONTS[L.font]?L.font:'anton',color:dsC(L.color,'#ffffff'),stroke:st,sw:dsN(L.sw,0,3,st?.4:0),shadow:L.shadow!==false,align:['left','center','right'].includes(L.align)?L.align:'left',box:dsC(L.box,null),upper:L.upper!==false,lh:dsN(L.lh,.8,2,1.08)})}
-  else if(t==='image'&&ni<3){ni++;out.layers.push({t:'image',x:b.x,y:b.y,w:b.w,h:b.h,rot:b.rot,prompt:String(L.prompt||'professional portrait, studio lighting').slice(0,400),mask:['circle','round'].includes(L.mask)?L.mask:'none',fade:['left','right','top','bottom'].includes(L.fade)?L.fade:'none',glow:dsC(L.glow,null),photo:!!L.photo})}
-  else if(t==='shape'){out.layers.push({t:'shape',s:['rect','round','circle','ring','arrow','burst','line','frame','ribbon'].includes(L.s)?L.s:'rect',x:b.x,y:b.y,w:b.w,h:b.h,rot:b.rot,c:dsC(L.c,'#ff2d2d'),a:dsN(L.a,0,1,1),sc:dsC(L.sc,null),sw:dsN(L.sw,0,3,.4)})}}
- return out}
-function dsFallback(brief){const f=ds.fmt,land=f.w>f.h*1.2,seed=[...(brief||'x')].reduce((a,c)=>a+c.charCodeAt(0),0),pal=[['#12060a','#7a0f1c','#ff3b30'],['#06121f','#0b4f8a','#22d3ee'],['#140a22','#5b21b6','#f59e0b']][seed%3],words=(brief||'Your Title').replace(/\s+/g,' ').trim().split(' ').slice(0,6).join(' ');
- return dsNorm({bg:{colors:[pal[0],pal[1]],angle:125,vignette:.5,glows:[{x:land?75:50,y:land?45:70,r:60,c:pal[2],a:.55}]},layers:[{t:'shape',s:'burst',x:land?55:10,y:land?-10:50,w:land?55:80,h:land?120:60,c:pal[2],a:.18},{t:'text',text:words,x:land?5:8,y:land?20:12,w:land?55:84,size:land?15:10,font:'anton',color:'#ffffff',stroke:'#000000',sw:.5,align:land?'left':'center'},{t:'shape',s:'round',x:land?5:25,y:land?74:82,w:land?22:50,h:land?3:1.6,c:pal[2]}]})}
-function dsPrompt(brief,edit){const f=ds.fmt;
- return 'You are a world-class art director who recreates top-performing '+f.n+' designs (YouTube documentary / business / education quality). Output ONE design as STRICT JSON for a canvas renderer.\n'+
- 'CANVAS: '+f.w+'x'+f.h+' px ('+ratioOf(f.w,f.h)+'). '+f.hint+'\n'+
- (ds.ref?'REFERENCE: the attached image is a reference design. Study it and COPY its layout grid, subject placement, title size and position, color palette, contrast, and effects (glow, outline, arrows, rings, boxes, light bursts) and mood. Use NEW content from the brief; never copy its faces, brands or exact words.\n':'No reference image is attached (ignore the blank image). Invent a professional design for the brief.\n')+
- (ds.style?'STYLE: '+ds.style+'.\n':'')+(ds.photo?'The user will place their own photo: include exactly one "image" layer for the main subject with "photo":true.\n':'')+
- 'BRIEF (may be Hindi/Hinglish; on-canvas text in the language the brief implies, English by default): '+(brief||'(follow the reference)')+'\n'+
- (edit?'CURRENT DESIGN JSON: '+JSON.stringify(ds.spec)+'\nEDIT REQUEST: '+edit+'\nApply the edit and return the FULL updated JSON.\n':'')+
- 'JSON SCHEMA (x,y,w,h are PERCENT of canvas; text "size" is percent of canvas HEIGHT; layers are drawn back to front):\n'+
- '{"bg":{"colors":["#hex","#hex"],"angle":135,"image":"text-to-image prompt for full background art, or null","dim":0.3,"vignette":0.4,"glows":[{"x":70,"y":40,"r":55,"c":"#ff3b00","a":0.6}]},"layers":[{"t":"image","prompt":"isolated subject, expressive, studio light, no text","x":55,"y":0,"w":45,"h":100,"mask":"none|round|circle","fade":"none|left|right|top|bottom","glow":"#hex or null","photo":false},{"t":"text","text":"WORDS","x":4,"y":12,"w":52,"size":11,"font":"anton|bebas|oswald|montserrat|playfair|marker|sans","color":"#ffffff","stroke":"#000000","sw":0.5,"shadow":true,"align":"left|center|right","box":"#e11d2e or null","rot":-3,"upper":true,"lh":1.05},{"t":"shape","s":"rect|round|circle|ring|arrow|burst|line|frame|ribbon","x":10,"y":60,"w":20,"h":14,"c":"#ff0000","a":1,"sc":"#000000 or null","sw":0.4,"rot":0}]}\n'+
- 'RULES: 6-14 layers. Title = 2-6 punchy words, HUGE (size >= 9 on wide canvases, >= 6 on tall ones), high contrast, >= 3% away from the edges. At most one accent color plus neutrals. Add a subject image layer when the format needs a face/object. Use arrows, rings, bursts, ribbons or boxes only when they help. Return ONLY the JSON, no markdown, no explanation.'}
-function dsFonts(){if(!ds.fonts){if(!document.getElementById('dsFontCss')){const l=document.createElement('link');l.id='dsFontCss';l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Oswald:wght@700&family=Montserrat:wght@900&family=Playfair+Display:wght@900&family=Permanent+Marker&display=swap';document.head.appendChild(l)}
-  ds.fonts=Promise.race([Promise.all(['400 40px Anton','400 40px "Bebas Neue"','700 40px Oswald','900 40px Montserrat','900 40px "Playfair Display"','400 40px "Permanent Marker"'].map(f=>document.fonts.load(f).catch(()=>0))),new Promise(r=>setTimeout(r,4500))])}return ds.fonts}
-/* ---------- renderer ---------- */
-function dsCover(g,im,x,y,w,h){const iw=im.width||im.naturalWidth,ih=im.height||im.naturalHeight;if(!iw||!ih)return;const k=Math.max(w/iw,h/ih),sw=w/k,sh=h/k;g.drawImage(im,(iw-sw)/2,(ih-sh)/2,sw,sh,x,y,w,h)}
-function dsRR(g,x,y,w,h,r){r=Math.max(0,Math.min(r,w/2,h/2));g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
-function dsBg(g,S,W,H){const a=S.bg.angle*Math.PI/180,vx=Math.sin(a),vy=-Math.cos(a),L=Math.abs(W*vx)+Math.abs(H*vy),cx=W/2,cy=H/2,gr=g.createLinearGradient(cx-vx*L/2,cy-vy*L/2,cx+vx*L/2,cy+vy*L/2);
- S.bg.colors.forEach((c,i,A)=>gr.addColorStop(i/(A.length-1),c));g.fillStyle=gr;g.fillRect(0,0,W,H);
- const bi=S.bg.image&&ds.imgs.get(S.bg.image);if(bi)dsCover(g,bi,0,0,W,H);else if(S.bg.image)dsTexture(g,S,W,H);
- if(S.bg.dim){g.fillStyle='rgba(0,0,0,'+S.bg.dim+')';g.fillRect(0,0,W,H)}
- for(const q of S.bg.glows){const r=q.r/100*Math.max(W,H),px=q.x/100*W,py=q.y/100*H,rg=g.createRadialGradient(px,py,0,px,py,r);rg.addColorStop(0,dsA(q.c,q.a));rg.addColorStop(1,dsA(q.c,0));g.fillStyle=rg;g.fillRect(0,0,W,H)}
- if(S.bg.vignette){const vg=g.createRadialGradient(W/2,H/2,Math.min(W,H)*.25,W/2,H/2,Math.hypot(W,H)/2);vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,'+S.bg.vignette+')');g.fillStyle=vg;g.fillRect(0,0,W,H)}}
-function dsImg(g,L,W,H){const x=L.x/100*W,y=L.y/100*H,w=Math.max(2,L.w/100*W),h=Math.max(2,L.h/100*H),im=L.photo?ds.photoImg:ds.imgs.get(L.prompt),t=document.createElement('canvas');t.width=Math.round(w);t.height=Math.round(h);const q=t.getContext('2d'),tw=t.width,th=t.height;
- if(im)dsCover(q,im,0,0,tw,th);else dsTplArt(q,tw,th)
- q.globalCompositeOperation='destination-in';
- if(L.mask==='circle'){q.beginPath();q.ellipse(tw/2,th/2,tw/2,th/2,0,0,7);q.fill()}else if(L.mask==='round'){dsRR(q,0,0,tw,th,Math.min(tw,th)*.08);q.fill()}
- if(L.fade&&L.fade!=='none'){const f=L.fade,gr=f==='left'?q.createLinearGradient(0,0,tw*.4,0):f==='right'?q.createLinearGradient(tw,0,tw*.6,0):f==='top'?q.createLinearGradient(0,0,0,th*.4):q.createLinearGradient(0,th,0,th*.6);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'#000');q.fillStyle=gr;q.fillRect(0,0,tw,th)}
- g.save();g.translate(x+w/2,y+h/2);if(L.rot)g.rotate(L.rot*Math.PI/180);if(L.glow){g.shadowColor=L.glow;g.shadowBlur=Math.min(w,h)*.07}g.drawImage(t,-w/2,-h/2,w,h);g.restore()}
-function dsText(g,L,W,H){const F=DS_FONTS[L.font]||DS_FONTS.anton,txt=L.upper?L.text.toUpperCase():L.text,maxW=Math.max(10,(L.w||60)/100*W);let px=L.size/100*H,lines=[],lh=px*L.lh;
- const fit=()=>{g.font=F[1]+' '+px+'px '+F[0];const out=[];let cur='';for(const w of txt.split(/\s+/)){const t=cur?cur+' '+w:w;if(!cur||g.measureText(t).width<=maxW)cur=t;else{out.push(cur);cur=w}}if(cur)out.push(cur);lines=out;lh=px*L.lh;return out.every(l=>g.measureText(l).width<=maxW*1.02)};
- for(let i=0;i<18&&!fit();i++)px*=.93;fit();
- if(L.h){const mh=L.h/100*H;for(let i=0;i<14&&lines.length*lh>mh;i++){px*=.93;fit()}}
- const bx=L.x/100*W,by=L.y/100*H,th=lines.length*lh,al=L.align;g.save();g.translate(bx+maxW/2,by+th/2);if(L.rot)g.rotate(L.rot*Math.PI/180);g.translate(-(bx+maxW/2),-(by+th/2));
- g.textBaseline='middle';g.textAlign=al;g.lineJoin='round';g.miterLimit=2;const ax=al==='left'?bx:al==='right'?bx+maxW:bx+maxW/2;
- lines.forEach((ln,i)=>{const ty=by+lh*i+lh/2,lw=g.measureText(ln).width;
-  if(L.box){const pad=px*.3,rx=al==='left'?ax:al==='right'?ax-lw:ax-lw/2;g.fillStyle=L.box;dsRR(g,rx-pad,ty-lh*.47,lw+pad*2,lh*.94,px*.12);g.fill()}
-  if(L.sw&&L.stroke){g.shadowColor='transparent';g.lineWidth=L.sw/100*H*2;g.strokeStyle=L.stroke;g.strokeText(ln,ax,ty)}
-  if(L.shadow){g.shadowColor='rgba(0,0,0,.6)';g.shadowBlur=px*.14;g.shadowOffsetY=px*.05}
-  g.fillStyle=L.color;g.fillText(ln,ax,ty);g.shadowColor='transparent';g.shadowBlur=0;g.shadowOffsetY=0});
- g.restore()}
-function dsShape(g,L,W,H){const x=L.x/100*W,y=L.y/100*H,w=L.w/100*W,h=L.h/100*H;g.save();g.translate(x+w/2,y+h/2);if(L.rot)g.rotate(L.rot*Math.PI/180);g.translate(-w/2,-h/2);g.globalAlpha=L.a;g.fillStyle=L.c;g.strokeStyle=L.sc||L.c;g.lineWidth=Math.max(1,L.sw/100*H*2);g.lineJoin='round';g.lineCap='round';
- const poly=p=>{g.beginPath();p.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.closePath()};
- switch(L.s){
-  case'circle':g.beginPath();g.ellipse(w/2,h/2,w/2,h/2,0,0,7);g.fill();if(L.sc)g.stroke();break;
-  case'ring':g.beginPath();g.ellipse(w/2,h/2,w/2,h/2,0,0,7);g.strokeStyle=L.c;g.stroke();break;
-  case'frame':g.strokeRect(0,0,w,h);break;
-  case'round':dsRR(g,0,0,w,h,Math.min(w,h)*.5);g.fill();if(L.sc)g.stroke();break;
-  case'line':g.beginPath();g.moveTo(0,h/2);g.lineTo(w,h/2);g.lineWidth=Math.max(2,h);g.strokeStyle=L.c;g.stroke();break;
-  case'ribbon':poly([[w*.06,0],[w,0],[w*.94,h],[0,h]]);g.fill();if(L.sc)g.stroke();break;
-  case'arrow':g.shadowColor='rgba(0,0,0,.45)';g.shadowBlur=Math.min(w,h)*.12;poly([[0,h*.3],[w*.62,h*.3],[w*.62,0],[w,h/2],[w*.62,h],[w*.62,h*.7],[0,h*.7]]);g.fill();g.shadowColor='transparent';if(L.sc)g.stroke();break;
-  case'burst':{const n=18,p=[];for(let i=0;i<n*2;i++){const r=i%2?.78:1,a=i*Math.PI/n;p.push([w/2+Math.cos(a)*w/2*r,h/2+Math.sin(a)*h/2*r])}poly(p);g.fill();if(L.sc)g.stroke();break}
-  default:g.fillRect(0,0,w,h);if(L.sc)g.strokeRect(0,0,w,h)}
- g.restore()}
-function dsDraw(){const cv=$('#dsCv'),S=ds.spec,f=ds.fmt;if(!S||!cv)return;if(cv.width!==f.w)cv.width=f.w;if(cv.height!==f.h)cv.height=f.h;const g=cv.getContext('2d');g.clearRect(0,0,f.w,f.h);dsBg(g,S,f.w,f.h);
- for(const L of S.layers){try{if(L.t==='text')dsText(g,L,f.w,f.h);else if(L.t==='image')dsImg(g,L,f.w,f.h);else dsShape(g,L,f.w,f.h)}catch(e){}}}
-const dsSoon=()=>{cancelAnimationFrame(ds.raf);ds.raf=requestAnimationFrame(dsDraw)};
-/* ---------- images ---------- */
-/* ---------- images: keyless engines (v45) ----------
-   Order (Auto): Gemini only if a key already exists -> Puter AI (GPT-Image / Imagen / FLUX, free Puter login, no API key)
-   -> AI Horde (open-source Stable Diffusion on community GPUs, public anonymous access) -> Pollinations (last resort).
-   If nothing works the design uses Canvas template art. A fake / unrelated photo is never shown as an AI result. */
-const DS_ENGN={gemini:'Gemini',puter:'Puter AI',horde:'AI Horde (Stable Diffusion)',pollin:'Pollinations'};
-const DS_DEAD={},DS_PT={p:null,ready:null},DS_PTM=['gpt-image-2','google/imagen-4.0-fast','black-forest-labs/flux-schnell'],DS_HD='https://aihorde.net/api/v2';
-let dsHordeQ=Promise.resolve();
-const dsAbortErr=()=>{try{return new DOMException('Aborted','AbortError')}catch{const e=new Error('Aborted');e.name='AbortError';return e}};
-const dsAbortable=(pr,sg,ms)=>new Promise((ok,no)=>{if(sg.aborted)return no(dsAbortErr());let done=false,tm=0;const ab=()=>fin(no,dsAbortErr()),fin=(f,v)=>{if(done)return;done=true;clearTimeout(tm);sg.removeEventListener('abort',ab);f(v)};tm=setTimeout(()=>fin(no,new Error('timeout '+Math.round(ms/1000)+'s')),ms);sg.addEventListener('abort',ab);Promise.resolve(pr).then(v=>fin(ok,v),e=>fin(no,e))});
-const dsSleep=(ms,sg)=>dsAbortable(new Promise(r=>setTimeout(r,ms)),sg,ms+5000);
-const dsMsg=e=>{if(!e)return'error';if(typeof e==='string')return e;const m=e.message||(e.error&&(e.error.message||(typeof e.error==='string'?e.error:'')))||e.msg||e.code;if(m)return String(m);try{return JSON.stringify(e).slice(0,120)}catch{return'error'}};
-function dsErr(k,e){const m=dsMsg(e).replace(/\s+/g,' ').slice(0,90);if(!ds.errs[k])ds.errs[k]=m}
-function dsReset(){for(const k in DS_DEAD)delete DS_DEAD[k];ds.errs={};DS_PT.ready=null}
-function dsPuterLoad(){if(window.puter&&window.puter.ai)return Promise.resolve(window.puter);if(!DS_PT.p)DS_PT.p=new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://js.puter.com/v2/';s.async=true;s.onload=()=>window.puter?ok(window.puter):(DS_PT.p=null,no(new Error('Puter SDK load nahi hua')));s.onerror=()=>{DS_PT.p=null;s.remove();no(new Error('Puter SDK load nahi hua (offline ya blocked)'))};document.head.appendChild(s)});return DS_PT.p}
-function dsPrime(){if(ds.eng==='tpl'||ds.eng==='horde')return;dsPuterLoad().catch(()=>{})}
-function dsPuterReady(){if(!DS_PT.ready){DS_PT.ready=(async()=>{const P=await dsPuterLoad();let on=false;try{on=await P.auth.isSignedIn()}catch{}if(!on){dsStat('Puter login popup — free account se login karo (API key nahi chahiye)…');await dsAbortable(P.auth.signIn(),new AbortController().signal,90000)}return P})();DS_PT.ready.catch(()=>{DS_DEAD.puter=1})}return DS_PT.ready}
-async function dsPuterConnect(){try{dsStat('Puter SDK load ho raha hai…');const P=await dsAbortable(dsPuterLoad(),new AbortController().signal,20000);let on=false;try{on=await P.auth.isSignedIn()}catch{}if(on){dsStat('Puter already connected ✓');return}dsStat('Puter login popup — free account se login karo…');await dsAbortable(P.auth.signIn(),new AbortController().signal,180000);DS_PT.ready=null;delete DS_DEAD.puter;dsStat('Puter connected ✓ — ab Generate ya Retry AI images dabao.')}catch(e){dsStat('Puter connect nahi hua: '+dsMsg(e)+'\nPopup blocked ho to browser me popups allow karo.')}}
-async function dsBitmap(b){try{return await createImageBitmap(b)}catch{const u=URL.createObjectURL(b),i=await dsLoad(u);return i}}
-/* accept only images that cannot taint the export canvas (data:/blob:, or CORS-clean) */
-async function dsSafe(el){const src=el&&(el.src||el.currentSrc);if(!src)return null;try{if(/^(data|blob):/.test(src))return await dsLoad(src);const r=await fetch(src);if(r.ok){const b=await r.blob();if(/^image\//.test(b.type))return await dsBitmap(b)}}catch{}
- return await new Promise(ok=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>ok(i);i.onerror=()=>ok(null);i.src=src})}
-async function dsGemini(p,W,H,sg){const gk=((settings.keys&&settings.keys.gemini)||'').trim();if(!gk)return null;
- const m0=($('#imageModelPick')||{}).value||'',model=/^gemini/.test(m0)?m0:'gemini-2.5-flash-image';
- const r=await dsAbortable(fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(model)+':generateContent',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':gk},body:JSON.stringify({contents:[{parts:[{text:p+'. Aspect ratio '+ratioOf(W,H)+'. No text, no watermark.'}]}],generationConfig:{responseModalities:['TEXT','IMAGE']}}),signal:sg}),sg,90000);
- if(!r.ok){let m='HTTP '+r.status;try{m=(await r.json()).error.message||m}catch{}DS_DEAD.gemini=1;throw new Error(m.slice(0,80))}
- const j=await r.json(),hit=((j&&j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts)||[]).map(x=>x.inlineData||x.inline_data).find(x=>x&&x.data);
- if(!hit)throw new Error('image nahi mili');
- return await dsLoad('data:'+(hit.mimeType||hit.mime_type||'image/png')+';base64,'+hit.data)}
-async function dsPuter(p,W,H,sg){
- const P=await dsAbortable(dsPuterReady(),sg,100000),wide=W>H*1.2,tall=H>W*1.2,prompt=p+'. '+(wide?'Wide cinematic composition. ':tall?'Tall portrait composition. ':'')+'No text, no letters, no watermark.';let last=null;
- for(const model of DS_PTM){if(sg.aborted)throw dsAbortErr();
-  try{const el=await dsAbortable(P.ai.txt2img(prompt,{model}),sg,100000),im=await dsSafe(el);if(im)return im;last=new Error('image decode nahi hui')}
-  catch(e){if(sg.aborted||(e&&e.name==='AbortError'))throw e;last=e;if(/auth|sign|login|permission|usage|limit|credit|fund|quota|payment|balance/i.test(dsMsg(e))){DS_DEAD.puter=1;break}}}
- if(last)throw last;return null}
-function dsHorde(p,W,H,sg){const run=()=>dsHordeRun(p,W,H,sg),q=dsHordeQ.then(run,run);dsHordeQ=q.catch(()=>{});return q}
-async function dsHordeRun(p,W,H,sg){
- if(sg.aborted)throw dsAbortErr();
- let id='';
- for(let t=0;t<2&&!id;t++){
-  const A=[393216,262144][t],s=Math.sqrt(A/(W*H)),r64=v=>Math.min(1024,Math.max(256,Math.round(v*s/64)*64)),w=r64(W),h=r64(H);
-  const r=await fetch(DS_HD+'/generate/async',{method:'POST',headers:{'Content-Type':'application/json',apikey:'0000000000'},signal:sg,body:JSON.stringify({prompt:p+', no text, no watermark, highly detailed, sharp focus ### text, letters, watermark, logo, signature, blurry, deformed, low quality',params:{width:w,height:h,steps:26,cfg_scale:7,sampler_name:'k_euler_a',n:1,karras:true},nsfw:false,censor_nsfw:true,r2:false,slow_workers:true})});
-  let j={};try{j=await r.json()}catch{}
-  if(r.ok&&j.id){id=j.id;break}
-  const m=String(j.message||j.error||('HTTP '+r.status));
-  if(t===0&&/width|height|size|kudos|resolution|pixel|too large/i.test(m))continue;
-  throw new Error(m.slice(0,100))}
- if(!id)throw new Error('request accept nahi hui');
- const t0=Date.now(),cancel=()=>{fetch(DS_HD+'/generate/status/'+id,{method:'DELETE',keepalive:true}).catch(()=>{})};
- try{for(;;){
-   if(Date.now()-t0>170000)throw new Error('queue bahut lambi (timeout)');
-   await dsSleep(3000,sg);
-   const r=await fetch(DS_HD+'/generate/check/'+id,{signal:sg});if(!r.ok)continue;const c=await r.json();
-   if(c.faulted)throw new Error('worker fault');
-   if(c.is_possible===false)throw new Error('abhi koi worker available nahi');
-   if(c.done)break;
-   dsStat('AI Horde (free open-source GPUs) queue'+(c.queue_position!=null?' #'+c.queue_position:'')+' · ~'+(c.wait_time!=null?c.wait_time:'?')+'s…')}}
- catch(e){cancel();throw e}
- const r=await fetch(DS_HD+'/generate/status/'+id,{signal:sg});const j=await r.json(),g=j&&j.generations&&j.generations[0];
- if(!g||!g.img)throw new Error('image nahi mili');
- if(g.censored)throw new Error('image censor ho gayi');
- let im=null;
- if(/^https?:/.test(g.img)){try{const b=await(await fetch(g.img,{signal:sg})).blob();if(/^image\//.test(b.type))im=await dsBitmap(b)}catch(e){if(sg.aborted)throw e}}
- else{const mt=g.img.startsWith('/9j/')?'jpeg':g.img.startsWith('iVBOR')?'png':'webp';im=await dsLoad('data:image/'+mt+';base64,'+g.img)}
- if(!im)throw new Error('image decode/CORS fail');return im}
-async function dsPollin(p,W,H,sg){const k=Math.min(1,1024/Math.max(W,H)),w=Math.max(64,Math.round(W*k/8)*8),h=Math.max(64,Math.round(H*k/8)*8);
- const r=await dsAbortable(fetch('https://image.pollinations.ai/prompt/'+encodeURIComponent(p+', no text, no watermark, high detail')+'?width='+w+'&height='+h+'&nologo=true&model=flux&seed='+Math.floor(Math.random()*1e6),{signal:sg}),sg,70000);
- if(!r.ok){DS_DEAD.pollin=1;throw new Error('HTTP '+r.status)}
- const b=await r.blob();if(!/^image\//.test(b.type))throw new Error('image nahi di');return await dsBitmap(b)}
-const DS_FN={gemini:dsGemini,puter:dsPuter,horde:dsHorde,pollin:dsPollin};
-async function dsImage(p,W,H,sg,rep){
- const order=ds.eng==='puter'?['puter']:ds.eng==='horde'?['horde']:['gemini','puter','horde','pollin'];
- for(const k of order){if(sg.aborted)throw dsAbortErr();if(DS_DEAD[k])continue;
-  try{const im=await DS_FN[k](String(p).slice(0,700),W,H,sg);if(im){if(rep)rep(k);return im}}
-  catch(e){if(sg.aborted||(e&&e.name==='AbortError'))throw e;dsErr(k,e)}}
- return null}
-/* ---------- honest template fallback (Canvas only, never posing as AI output) ---------- */
-function dsAcc(){const S=ds.spec;if(!S)return'#ff6a00';return(S.bg.glows&&S.bg.glows[0]&&S.bg.glows[0].c)||S.bg.colors[S.bg.colors.length-1]||'#ff6a00'}
-function dsTplArt(q,tw,th){const c=dsAcc(),m=Math.min(tw,th),cx=tw/2,cy=th*.48,rg=q.createRadialGradient(cx,cy,0,cx,cy,m*.75);
- rg.addColorStop(0,dsA(c,.55));rg.addColorStop(.55,dsA(c,.16));rg.addColorStop(1,dsA(c,0));q.fillStyle=rg;q.fillRect(0,0,tw,th);
- q.save();q.strokeStyle=dsA(c,.5);q.lineWidth=Math.max(2,m*.012);
- for(let i=0;i<3;i++){q.globalAlpha=.7-i*.2;q.beginPath();q.arc(cx,cy,m*(.22+i*.14),0,7);q.stroke()}
- q.globalAlpha=.22;q.fillStyle=c;const st=Math.max(10,m*.055);
- for(let y=st/2;y<th;y+=st)for(let x=((y/st|0)%2?st/2:0);x<tw;x+=st){const d=Math.hypot(x-cx,y-cy)/(m*.9);if(d>.35&&d<1.2){q.beginPath();q.arc(x,y,Math.max(1,st*.16*Math.min(1,d-.2)),0,7);q.fill()}}
- q.restore()}
-function dsTexture(g,S,W,H){const gl=S.bg.glows&&S.bg.glows[0],acc=gl?gl.c:S.bg.colors[S.bg.colors.length-1],px=(gl?gl.x:60)/100*W,py=(gl?gl.y:40)/100*H;let sd=[...String(S.bg.image||'x')].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,11);const rnd=()=>{sd=(sd*1664525+1013904223)>>>0;return sd/4294967296};
- g.save();const R=Math.hypot(W,H);
- for(let i=0;i<22;i++){const a=(i/22)*Math.PI*2+rnd()*.12,wd=.035+rnd()*.05,gr=g.createRadialGradient(px,py,0,px,py,R*.7);gr.addColorStop(0,dsA(acc,.16));gr.addColorStop(1,dsA(acc,0));g.beginPath();g.moveTo(px,py);g.arc(px,py,R,a,a+wd);g.closePath();g.fillStyle=gr;g.fill()}
- for(let i=0;i<26;i++){const r=(.01+rnd()*.035)*Math.min(W,H);g.beginPath();g.arc(rnd()*W,rnd()*H,r,0,7);g.fillStyle=dsA(acc,.04+rnd()*.07);g.fill()}
- g.restore()}
-/* ---------- fill all image slots, report honestly ---------- */
-async function dsFillImages(spec,sg){
- const f=ds.fmt,notes=[],jobs=[];
- if(spec.bg.image)jobs.push([spec.bg.image,f.w,f.h]);
- for(const L of spec.layers)if(L.t==='image'&&!L.photo)jobs.push([L.prompt,Math.round(L.w/100*f.w),Math.round(L.h/100*f.h)]);
- const todo=jobs.filter((j,i)=>!ds.imgs.has(j[0])&&jobs.findIndex(x=>x[0]===j[0])===i),cnt={};let miss=0;
- if(todo.length&&ds.eng!=='tpl'){
-  for(let i=0;i<todo.length;i+=2)await Promise.all(todo.slice(i,i+2).map(async(j,k)=>{dsStat('AI image '+(i+k+1)+'/'+todo.length+' ban rahi hai…');const im=await dsImage(j[0],j[1],j[2],sg,e=>{cnt[e]=(cnt[e]||0)+1});if(im)ds.imgs.set(j[0],im);else miss++}))
- }else miss=todo.length;
- ds.miss=miss;const rt=$('#dsRetry');if(rt)rt.hidden=!miss||ds.eng==='tpl';
- const got=Object.keys(cnt).map(k=>DS_ENGN[k]+' ×'+cnt[k]);
- if(got.length)notes.push('AI images ✓ '+got.join(', '));
- if(miss&&ds.eng==='tpl')notes.push('Template mode: AI image use nahi hui — design Canvas vector art + gradients se bana.');
- else if(miss){const er=Object.keys(ds.errs).map(k=>(DS_ENGN[k]||k)+': '+ds.errs[k]).slice(0,3).join(' · ');notes.push(miss+' image slot me AI image nahi ban payi → template art (gradient/rings) lagaya; koi nakli AI image nahi dikhayi.'+(er?'\nReason — '+er:'')+'\nFix: "Connect Puter" dabao ya "My photo" jodo, phir "Retry AI images".')}
- return notes}
-async function dsRetry(){if(ds.busy||!ds.spec)return;dsReset();dsPrime();ds.ab=new AbortController();const sg=ds.ab.signal;dsBusy(true);
- try{const n=await dsFillImages(ds.spec,sg);dsDraw();dsStat(n.length?n.join('\n'):'Ready ✓')}catch(e){if(e&&e.name==='AbortError')dsStat('Stopped.');else dsStat('Error: '+dsMsg(e))}finally{dsBusy(false)}}
-/* ---------- orchestration ---------- */
-const dsStat=t=>{const e=$('#dsStat');if(e)e.textContent=t};
-function dsBusy(b){ds.busy=b;$('#dsGo').textContent=b?'■ Stop':'✨ Generate design';$('#dsApply').disabled=b}
-async function dsGenerate(edit){
- if(ds.busy){ds.ab&&ds.ab.abort();return}
- const brief=$('#dsBrief').value.trim();if(!edit&&!brief&&!ds.ref){toast('Brief likho ya reference do.');return}
- dsReset();dsPrime();ds.ab=new AbortController();const sg=ds.ab.signal;dsBusy(true);const notes=[];
- try{
-  dsStat('Reference padh raha hoon, layout bana raha hoon…');
-  let spec=null,err='';
-  try{const txt=await libAI(ds.ref?ds.ref.data:DS_BLANK,dsPrompt(brief,edit),t=>dsStat('Designing layout… '+t.length+' chars'),sg);spec=dsNorm(dsParse(txt));if(!spec.layers.length)throw new Error('AI layout khali')}catch(e){if(sg.aborted)throw e;err=String(e&&e.message||e);spec=null}
-  if(!spec){spec=ds.spec&&edit?ds.spec:dsFallback(brief);notes.push('AI layout nahi mila ('+err.slice(0,110)+') → '+(edit?'purana design rakha.':'smart template use hua.'))}
-  const f=ds.fmt;
-  if(ds.photo){let L=spec.layers.find(x=>x.t==='image'&&x.photo)||spec.layers.find(x=>x.t==='image');if(!L){L={t:'image',prompt:'',x:0,y:0,w:0,h:0,rot:0,mask:'none',fade:'none',glow:null,photo:true};const wide=f.w>f.h*1.2;Object.assign(L,wide?{x:55,y:0,w:45,h:100,fade:'left'}:{x:8,y:42,w:84,h:58,fade:'top'});spec.layers.push(L)}L.photo=true}else spec.layers.forEach(x=>{if(x.t==='image')x.photo=false});
-  const imn=await dsFillImages(spec,sg);notes.push(...imn);
-  ds.spec=spec;await dsFonts();$('#dsStage').hidden=false;$('#dsAfter').hidden=false;dsDraw();dsTextsUI();
-  dsStat((notes.length?notes.join('\n'):'Ready ✓ — neeche text edit karo ya prompt se badlo.'))
- }catch(e){if(e&&e.name==='AbortError')dsStat('Stopped.');else dsStat('Error: '+(e&&e.message||e))}
- finally{dsBusy(false)}}
-function dsTextsUI(){const T=(ds.spec?ds.spec.layers:[]).filter(l=>l.t==='text').slice(0,8);$('#dsTexts').innerHTML=T.map((l,i)=>'<label><span style="width:44px">Text '+(i+1)+'</span><input data-dt="'+i+'" value="'+esc(l.text)+'"></label>').join('')}
-/* ---------- export ---------- */
-const dsBlob=(type,q)=>new Promise((ok,no)=>{try{$('#dsCv').toBlob(b=>b?ok(b):no(new Error('blob')),type,q)}catch(e){no(e)}});
-async function dsPDF(){const jb=await dsBlob('image/jpeg',.92),jpg=new Uint8Array(await jb.arrayBuffer()),W=ds.fmt.w,H=ds.fmt.h,a4=ds.fmt.k==='poster',PW=a4?595.28:+(W*.75).toFixed(2),PH=a4?841.89:+(H*.75).toFixed(2),enc=new TextEncoder(),parts=[],offs=[];let len=0;
- const push=u=>{parts.push(u);len+=u.length},s=t=>push(enc.encode(t)),obj=(n,b)=>{offs[n]=len;s(n+' 0 obj\n'+b+'\nendobj\n')};
- s('%PDF-1.4\n%\u00e2\u00e3\u00cf\u00d3\n');obj(1,'<</Type/Catalog/Pages 2 0 R>>');obj(2,'<</Type/Pages/Kids[3 0 R]/Count 1>>');
- obj(3,'<</Type/Page/Parent 2 0 R/MediaBox[0 0 '+PW+' '+PH+']/Resources<</XObject<</Im0 4 0 R>>>>/Contents 5 0 R>>');
- offs[4]=len;s('4 0 obj\n<</Type/XObject/Subtype/Image/Width '+W+'/Height '+H+'/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length '+jpg.length+'>>\nstream\n');push(jpg);s('\nendstream\nendobj\n');
- const cs='q '+PW+' 0 0 '+PH+' 0 0 cm /Im0 Do Q';obj(5,'<</Length '+cs.length+'>>\nstream\n'+cs+'\nendstream');
- const xr=len;let x='xref\n0 6\n0000000000 65535 f \n';for(let i=1;i<=5;i++)x+=String(offs[i]).padStart(10,'0')+' 00000 n \n';s(x+'trailer\n<</Size 6/Root 1 0 R>>\nstartxref\n'+xr+'\n%%EOF');
- return new Blob(parts,{type:'application/pdf'})}
-async function dsSave(kind){if(!ds.spec)return;try{dsDraw();const b=kind==='pdf'?await dsPDF():await dsBlob(kind==='png'?'image/png':'image/jpeg',.93),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='redfox-'+ds.fmt.k+'-'+ds.fmt.w+'x'+ds.fmt.h+'.'+(kind==='pdf'?'pdf':kind==='png'?'png':'jpg');document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000)}catch(e){toast('Export fail: image security block. "Generate" dobara karo.')}}
-/* ---------- UI ---------- */
-function dsRefUI(){const e=$('#dsRef');e.innerHTML=ds.ref?'<img src="'+ds.ref.data+'" alt=""><span>'+esc(ds.ref.name)+'</span><button type="button" id="dsRefX">Remove</button>':'<span>Reference image ya PDF do — AI uski layout, colors aur style copy karke naya design banayega.</span>';
- const p=$('#dsPhotoNote');if(p)p.textContent=ds.photo?'Photo added ✓':''}
-function dsFmtUI(){$('#dsFmts').innerHTML=DS_FMTS.map(f=>'<button type="button" data-df="'+f.k+'" class="'+(f===ds.fmt?'on':'')+'">'+f.n+'</button>').join('');$('#dsStyles').innerHTML=DS_STYLES.map(s=>'<button type="button" data-dst="'+s+'" class="'+(ds.style===s?'on':'')+'">'+s+'</button>').join('')}
-function dsBuild(){if(ds.built)return;ds.built=true;
- document.body.insertAdjacentHTML('beforeend','<div class="pg-ov ds-ov" id="dsOv"><div class="ds-wrap"><div class="pg-head"><button class="icon-btn" id="dsClose" aria-label="Back"><svg class="ic-back" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><h2>🎨 Design Studio</h2></div>'+
- '<h3>Format</h3><div class="ds-fmts" id="dsFmts"></div><h3>Style</h3><div class="ds-chips" id="dsStyles"></div>'+
- '<h3>AI image engine</h3><select class="ds-in ds-sel" id="dsEng"><option value="auto">Auto — Puter AI → AI Horde (free, no API key)</option><option value="puter">Puter AI only (GPT-Image / Imagen / FLUX)</option><option value="horde">AI Horde only (open-source Stable Diffusion)</option><option value="tpl">Template only (Canvas, no AI images)</option></select><button class="pbtn" id="dsPtLogin" type="button">🔑 Connect Puter (free login, no API key)</button><div class="ds-note">Best models (GPT-Image, Imagen, FLUX) Puter free account se chalte hain — ek baar login. Login na ho to AI Horde use hota hai. Dono na chalein to template art banta hai; nakli AI image kabhi nahi dikhayi jaati.</div>'+
- '<h3>Brief</h3><textarea class="ds-in" id="dsBrief" placeholder="Hinglish ok. e.g. Stanford $8 billion fraud documentary thumbnail, shocked businessman, red arrow, burning money"></textarea>'+
- '<h3>Reference (image / PDF)</h3><div class="ds-ref" id="dsRef"></div><div class="ds-row"><button class="pbtn" id="dsPickRef" type="button">📎 Reference upload</button><button class="pbtn" id="dsPickPhoto" type="button">🙂 My photo <small id="dsPhotoNote"></small></button></div>'+
- '<button class="pbtn pri" id="dsGo" type="button" style="margin-top:14px">✨ Generate design</button><div class="ds-stat" id="dsStat"></div>'+
- '<div class="ds-stage" id="dsStage" hidden><canvas id="dsCv" width="1280" height="720"></canvas></div>'+
- '<div id="dsAfter" hidden><h3>Edit text</h3><div class="ds-edit" id="dsTexts"></div><h3>Change with prompt</h3><div class="ds-row"><input class="ds-in" style="min-height:0;height:46px" id="dsEditIn" placeholder="e.g. title bada karo, arrow red, background dark blue"><button class="pbtn pri" id="dsApply" type="button" style="margin-top:0;flex:none;width:auto;padding:0 20px">Apply</button></div>'+
- '<button class="pbtn" id="dsRetry" type="button" hidden style="margin-top:10px">🔁 Retry AI images</button><div class="ds-act"><button class="pbtn" data-dsv="png" type="button">⬇ PNG</button><button class="pbtn" data-dsv="jpg" type="button">⬇ JPG</button><button class="pbtn" data-dsv="pdf" type="button">⬇ PDF</button><button class="pbtn" data-dsv="chat" type="button">💬 Add to chat</button></div></div>'+
- '<input type="file" id="dsRefIn" accept="image/*,application/pdf,.pdf" hidden><input type="file" id="dsPhotoIn" accept="image/*" hidden></div></div>');
- dsFmtUI();dsRefUI();const ov=$('#dsOv');
- ov.addEventListener('click',async e=>{const t=e.target;
-  if(t.closest('#dsClose')){ds.ab&&ds.ab.abort();ov.classList.remove('show');return}
-  let b=t.closest('[data-df]');if(b){ds.fmt=DS_FMTS.find(f=>f.k===b.dataset.df)||ds.fmt;dsFmtUI();return}
-  b=t.closest('[data-dst]');if(b){ds.style=ds.style===b.dataset.dst?'':b.dataset.dst;dsFmtUI();return}
-  if(t.closest('#dsPickRef')){$('#dsRefIn').click();return}if(t.closest('#dsPickPhoto')){$('#dsPhotoIn').click();return}
-  if(t.closest('#dsRefX')){ds.ref=null;dsRefUI();return}
-  if(t.closest('#dsPtLogin')){dsPuterConnect();return}if(t.closest('#dsRetry')){dsRetry();return}if(t.closest('#dsGo')){dsGenerate();return}
-  if(t.closest('#dsApply')){const v=$('#dsEditIn').value.trim();if(!v){toast('Kya badalna hai likho.');return}if(!ds.spec){toast('Pehle design generate karo.');return}await dsGenerate(v);$('#dsEditIn').value='';return}
-  b=t.closest('[data-dsv]');if(b){const v=b.dataset.dsv;if(v==='chat'){if(!ds.spec)return;try{dsDraw();const src=(await dsBlob('image/jpeg',.9)),u=await new Promise(ok=>{const r=new FileReader();r.onload=()=>ok(r.result);r.readAsDataURL(src)});addImageToChat('Design: '+($('#dsBrief').value.trim()||ds.fmt.n),u);ov.classList.remove('show');$('#libOv').classList.remove('show')}catch{toast('Chat me add nahi hua.')}}else dsSave(v)}});
- $('#dsEng').addEventListener('change',e=>{ds.eng=e.target.value;const r=$('#dsRetry');if(r)r.hidden=!ds.miss||ds.eng==='tpl'});
- $('#dsTexts').addEventListener('input',e=>{const i=e.target.dataset.dt;if(i==null||!ds.spec)return;const T=ds.spec.layers.filter(l=>l.t==='text');if(T[+i]){T[+i].text=e.target.value||' ';dsSoon()}});
- $('#dsRefIn').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{if(f.type==='application/pdf'||/\.pdf$/i.test(f.name)){toast('PDF padh raha hoon…');const x=await rfxExtract(f),im=(x.images||[])[0];if(!im)throw new Error('PDF ka page image nahi ban paya.');ds.ref={data:im,name:f.name}}else ds.ref={data:await shrink(f),name:f.name};dsRefUI()}catch(err){toast(err.message||'Reference read nahi hua.')}});
- $('#dsPhotoIn').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{ds.photo=await shrink(f);ds.photoImg=await dsLoad(ds.photo);dsRefUI();if(ds.spec){const L=ds.spec.layers.find(x=>x.t==='image');if(L){L.photo=true;dsSoon()}}}catch{toast('Photo read nahi hui.')}})}
-function openDesignStudio(o){o=o||{};dsBuild();if(o.fmt)ds.fmt=DS_FMTS.find(f=>f.k===o.fmt)||ds.fmt;if(o.ref)ds.ref=o.ref;if(o.brief)$('#dsBrief').value=o.brief;dsFmtUI();dsRefUI();$('#dsOv').classList.add('show');dsFonts()}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-ds]');if(!b)return;e.stopPropagation();e.preventDefault();closeMenus();closeSide();openDesignStudio()},true);
-/* entry points: sidebar, + menu, Library */
-$('.side-nav').querySelector('[data-section="projects"]').insertAdjacentHTML('beforebegin','<button class="side-link" data-ds="1"><svg class="nav-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.9 2-1.8 0-1.2-1-1.4-1-2.5 0-1 .8-1.7 1.8-1.7H17a4 4 0 0 0 4-4C21 6.8 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.1"/><circle cx="10" cy="7.3" r="1.1"/><circle cx="14.5" cy="7.3" r="1.1"/></svg>Design Studio</button>');
-$('#plusMenu').querySelector('[data-action="export"]').insertAdjacentHTML('beforebegin','<button data-ds="1"><span>🎨</span><span>Design Studio</span></button>');
-$('#lib-list .pg-head').insertAdjacentHTML('beforeend','<button class="icon-btn" data-ds="1" aria-label="Design Studio" title="Design Studio">🎨</button>');
-$('#libUse').insertAdjacentHTML('afterend','<button class="pbtn" id="libDs" type="button">🎨 Design like this (Design Studio)</button>');
-$('#libDs').addEventListener('click',async()=>{const it=libCur;if(!it)return;const cat=LIBCATS.find(c=>c.k===libCat),sub=LSEL[libCat],map={thumb:'thumb',wallpaper:'wall',banner:(['sign','shop','billboard','neon'].includes(sub)?'sign':'banner'),post:'post',logo:'logo',image:'post'};
- toast('Reference le raha hoon…');try{const data=await libImgData(it,cat,new AbortController().signal);openDesignStudio({fmt:map[libCat]||'thumb',ref:{data,name:(it.who||cat.n)+' reference'}})}catch{toast('Reference load nahi hua.')}});
-
 /* ===== v19 · hooks: long-prompt toggle + overflow check ===== */
 function rfFit(){chatContent.querySelectorAll('.msg-text.rf-clamp').forEach(t=>{const b=t.nextElementSibling;if(!b||!b.classList.contains('rf-tg'))return;b.hidden=!(t.classList.contains('open')||t.scrollHeight>t.clientHeight+2)})}
 {let fq=0;const sched=()=>{if(fq)return;fq=requestAnimationFrame(()=>{fq=0;rfFit()})};
@@ -3061,17 +2855,24 @@ const PJ_PIN='<svg class="pj-pin" viewBox="0 0 24 24" aria-hidden="true"><path d
 function pjIcon(f){if(f.k==='yt')return'<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="1.5" y="4.5" width="21" height="15" rx="4.5" fill="#f00"/><path d="M10 9l5.5 3L10 15z" fill="#fff"/></svg>';
  if(f.k==='link')return'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>';
  return fileIconSVG(f.name,f.type,24)}
-function pjDropRender(){const fs=(curPj&&curPj.files)||[],n=$('#pjDropN'),l=$('#pjDropList');if(!n||!l)return;n.textContent=fs.length;
- l.innerHTML=fs.length?fs.map(f=>'<button type="button" class="pjn-row" data-pdo="'+f.id+'">'+pjIcon(f)+'<b>'+esc(f.name)+'</b></button>').join(''):'<div class="pjn-empty">Is project me abhi koi file ya image nahi hai.</div>'}
+const pjOpenSet=new Set();
+function pjDropRender(){/* v47: every project folder row has its own files dropdown (0 files -> "No files") */
+ document.querySelectorAll('#pjItems .pjrow').forEach(r=>{const p=projects.find(x=>x.id===r.dataset.pid),l=r.querySelector('.pjn-list'),n=r.querySelector('.pjr-n');if(!p||!l)return;const fs=p.files||[];if(n)n.textContent=fs.length;
+  l.innerHTML=fs.length?fs.map(f=>'<button type="button" class="pjn-row" data-pdp="'+p.id+'" data-pdo="'+f.id+'">'+pjIcon(f)+'<span class="pjn-tx"><b>'+esc(f.name)+'</b></span></button>').join(''):'<div class="pjn-empty">No files</div>'})}
 {const nm=$('#pjName'),w=document.createElement('div');w.className='pjn-wrap';nm.parentNode.insertBefore(w,nm);w.appendChild(nm);
- w.insertAdjacentHTML('beforeend','<button type="button" class="pjn-dd" id="pjDrop" aria-expanded="false" aria-label="Show project files"><span id="pjDropN">0</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>');
- const l=document.createElement('div');l.id='pjDropList';l.className='pjn-list';l.hidden=true;w.after(l);
- $('#pjDrop').onclick=()=>{const o=l.hidden;l.hidden=!o;$('#pjDrop').setAttribute('aria-expanded',String(o))};
- l.addEventListener('click',e=>{const r=e.target.closest('[data-pdo]');if(r)pjOpen(r.dataset.pdo)})}
-{const _a=openPj;openPj=function(id){_a(id);const l=$('#pjDropList');if(l){l.hidden=true;$('#pjDrop').setAttribute('aria-expanded','false')}pjDropRender()}}
+ $('#pjItems').addEventListener('click',e=>{const d=e.target.closest('.pjr-dd');if(d){e.stopPropagation();const r=d.closest('.pjrow'),l=r.querySelector('.pjn-list'),o=l.hidden;l.hidden=!o;d.setAttribute('aria-expanded',String(o));o?pjOpenSet.add(r.dataset.pid):pjOpenSet.delete(r.dataset.pid);return}
+  const f=e.target.closest('[data-pdo]');if(f){e.stopPropagation();pjOpenIn(f.dataset.pdp,f.dataset.pdo)}})}
+async function pjOpenIn(pid,fid){const p=projects.find(x=>x.id===pid),f=p&&(p.files||[]).find(x=>x.id===fid);if(!f)return;
+ if(f.url){window.open(f.url,'_blank','noopener');return}
+ const b=await kvGet(pjKey(p,f));if(!b){toast('File nahi mili — dobara jodo.');return}window.open(URL.createObjectURL(b),'_blank')}
 {const _b=pjFilesRender;pjFilesRender=function(){_b.apply(this,arguments);pjDropRender()}}
 {const _rp=renderProjects;renderProjects=function(){projects.sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));_rp.apply(this,arguments);
- $('#pjItems').querySelectorAll('[data-pj]').forEach(b=>{const p=projects.find(x=>x.id===b.dataset.pj);if(p&&p.pinned&&b.lastElementChild)b.lastElementChild.insertAdjacentHTML('afterbegin',PJ_PIN)})};$('#pjBack').onclick=()=>renderProjects()}
+ $('#pjItems').querySelectorAll('[data-pj]').forEach(b=>{const p=projects.find(x=>x.id===b.dataset.pj);if(p&&p.pinned&&b.lastElementChild)b.lastElementChild.insertAdjacentHTML('afterbegin',PJ_PIN)});
+ $('#pjItems').querySelectorAll('[data-pj]').forEach(b=>{const p=projects.find(x=>x.id===b.dataset.pj);if(!p)return;const sp=b.firstElementChild,sm=sp&&sp.querySelector('small');
+  if(sp)sp.innerHTML='<i class="pjr-ic">📁</i><span class="pjr-tx"><b>'+esc(p.name)+'</b>'+(sm?'<small>'+sm.innerHTML+'</small>':'')+'</span>';
+  const w=document.createElement('div'),h=document.createElement('div'),op=pjOpenSet.has(p.id);w.className='pjrow';w.dataset.pid=p.id;h.className='pjrow-h';b.parentNode.insertBefore(w,b);w.appendChild(h);h.appendChild(b);
+  h.insertAdjacentHTML('beforeend','<button type="button" class="pjr-dd" aria-expanded="'+op+'" aria-label="Show files of '+esc(p.name)+'"><span class="pjr-n">0</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>');w.insertAdjacentHTML('beforeend','<div class="pjn-list"'+(op?'':' hidden')+'></div>')});
+ pjDropRender()};$('#pjBack').onclick=()=>renderProjects()}
 document.body.insertAdjacentHTML('beforeend','<div class="pjm" id="pjMenu"><div class="pjm-box" id="pjMenuBox"></div></div>');
 let pjMP=null;
 function pjRefresh(){if(curPj&&!$('#pj-one').hidden)$('#pjName').value=curPj.name;if(!$('#pj-list').hidden)renderProjects()}
@@ -3095,9 +2896,9 @@ $('#pjMenu').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='p
  const stop=()=>{clearTimeout(t);t=null};
  const start=(e,id)=>{fired=false;xy={x:e.clientX,y:e.clientY};clearTimeout(t);t=setTimeout(()=>{t=null;fired=true;try{navigator.vibrate&&navigator.vibrate(18)}catch(_){}pjMenuOpen(id)},500)};
  items.addEventListener('pointerdown',e=>{const b=e.target.closest('[data-pj]');if(b)start(e,b.dataset.pj)});
- wrap.addEventListener('pointerdown',e=>{if(e.target.closest('#pjDrop')||!curPj||!$('#pjName').readOnly)return;start(e,curPj.id)});
+ wrap.addEventListener('pointerdown',e=>{if(!curPj||!$('#pjName').readOnly)return;start(e,curPj.id)});
  for(const el of[items,wrap]){el.addEventListener('pointermove',e=>{if(t&&xy&&Math.hypot(e.clientX-xy.x,e.clientY-xy.y)>10)stop()});['pointerup','pointercancel','pointerleave'].forEach(n=>el.addEventListener(n,stop));
-  el.addEventListener('contextmenu',e=>{e.preventDefault();const b=e.target.closest('[data-pj]'),id=b?b.dataset.pj:(curPj&&$('#pjName').readOnly&&!e.target.closest('#pjDrop')?curPj.id:null);if(id)pjMenuOpen(id)})}
+  el.addEventListener('contextmenu',e=>{e.preventDefault();const b=e.target.closest('[data-pj]'),id=b?b.dataset.pj:(curPj&&$('#pjName').readOnly?curPj.id:null);if(id)pjMenuOpen(id)})}
  ['pointerup','pointercancel'].forEach(n=>document.addEventListener(n,()=>{if(fired)setTimeout(()=>{fired=false},300)},true));
  $('#projOv').addEventListener('click',e=>{if(fired){fired=false;e.stopPropagation();e.preventDefault()}},true)}
 
@@ -4107,7 +3908,7 @@ html.light .code-act.ed{background:#fff1e6;color:#c2410c;border-color:#f97316}
 .rfed-box{width:min(1320px,97vw);height:min(900px,94dvh);display:flex;flex-direction:column;background:#141414;border:1px solid #3a3a3a;border-radius:16px;box-shadow:0 24px 80px #000c,0 0 0 1px #f9731622;overflow:hidden;transform:translateY(10px) scale(.985);transition:transform .2s;color:#eee}
 .rfed.open .rfed-box{transform:none}
 .rfed.fs .rfed-box{width:100vw;height:100dvh;border-radius:0;border:0}
-.rfed-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 10px;background:linear-gradient(180deg,#202020,#171717);border-bottom:1px solid #2e2e2e;flex:none}
+.rfed-top{position:relative;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 54px 8px 10px;background:linear-gradient(180deg,#202020,#171717);border-bottom:1px solid #2e2e2e;flex:none}
 .rfed-title{display:flex;align-items:center;gap:8px;min-width:0;flex:1 1 220px}
 .rfed-dot{width:9px;height:9px;border-radius:50%;background:#f97316;box-shadow:0 0 10px #f97316;flex:none}
 .rfed-title b{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw}
@@ -4121,6 +3922,7 @@ html.light .code-act.ed{background:#fff1e6;color:#c2410c;border-color:#f97316}
 .rfed-b.run.stop{background:#3a1a1a;color:#ff9b9b;border-color:#7a2d2d;box-shadow:none}
 .rfed-b.on{border-color:#f97316;color:#fb923c;background:#f9731620}
 .rfed-b.x{background:transparent;border-color:transparent}
+.rfed-top>.rfed-b.x{position:absolute;right:8px;top:8px;z-index:3;width:38px;min-width:38px;padding:0;border-radius:50%;background:#ffffff14}.rfed-top>.rfed-b.x svg{width:20px;height:20px;stroke-width:2.6}
 .rfed-live{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#bbb;padding:0 4px;flex:none;white-space:nowrap}
 .rfed-live input{accent-color:#f97316;width:16px;height:16px;margin:0}
 .rfed-tabs{display:none;flex:none;background:#171717;border-bottom:1px solid #2e2e2e}
@@ -4171,8 +3973,9 @@ html.light .code-act.ed{background:#fff1e6;color:#c2410c;border-color:#f97316}
 @media(max-width:820px){
  .rfed{align-items:stretch}
  .rfed-box{width:100vw;height:100dvh;border-radius:0;border:0;padding-bottom:env(safe-area-inset-bottom)}
- .rfed-top{padding-top:max(8px,env(safe-area-inset-top))}
- .rfed-title{flex:1 1 100%}.rfed-title b{max-width:52vw}
+ .rfed-top{padding:max(8px,env(safe-area-inset-top)) 10px 8px}
+ .rfed-top>.rfed-b.x{top:max(8px,env(safe-area-inset-top))}
+ .rfed-title{flex:1 1 100%;padding-right:46px}.rfed-title b{max-width:52vw}
  .rfed-btns{flex:1 1 100%}
  .rfed-tabs{display:flex}
  .rfed-main{display:block;position:relative}
@@ -4191,6 +3994,7 @@ html.light .rfed-top{background:linear-gradient(180deg,#fff,#f3f3f6);border-colo
 html.light .rfed-b,html.light .rfed-title select{background:#fff;color:#18181b;border-color:#d4d4dc}
 html.light .rfed-b.run{background:linear-gradient(180deg,#ff9a3c,#f97316);color:#1b1004}
 html.light .rfed-b.x{background:transparent;border-color:transparent}
+html.light .rfed-top>.rfed-b.x{background:#0000000d}
 html.light .rfed-tabs,html.light .rfed-files{background:#f3f3f6;border-color:#e1e1e6}html.light .rfed-f{background:#ececef;color:#555;border-color:#d8d8de}html.light .rfed-f.on{background:#fff;color:#c2410c}
 html.light .rfed-ed,html.light .rfed-empty{background:#fff}html.light .rfed-gut{background:#f6f6f8;border-color:#e6e6ea;color:#9a9aa4}
 html.light .rfed-hl{color:#1f2328}html.light .rfed-stat,html.light .rfed-con-h{background:#f3f3f6;border-color:#e1e1e6;color:#555}
@@ -4349,7 +4153,7 @@ function edBuild(){
  +'<button type="button" class="rfed-b" id="rfedReset" title="Reset to the AI version">'+ED_ICO.reset+'<span class="lbl">Reset</span></button>'
  +'<button type="button" class="rfed-b" id="rfedDl" title="Download file">'+ED_ICO.dl+'<span class="lbl">Download</span></button>'
  +'<button type="button" class="rfed-b" id="rfedFs" title="Fullscreen">'+ED_ICO.fs+'<span class="lbl">Fullscreen</span></button>'
- +'<button type="button" class="rfed-b x" id="rfedX" title="Close editor" aria-label="Close editor">'+ED_ICO.x+'</button></div></div>'
+ +'</div><button type="button" class="rfed-b x" id="rfedX" title="Close editor" aria-label="Close editor">'+ED_ICO.x+'</button></div>'
  +'<div class="rfed-tabs" role="tablist"><button type="button" data-p="code" class="on">Code</button><button type="button" data-p="prev">Preview</button><button type="button" data-p="con">Console<i id="rfedDot"></i></button></div>'
  +'<div class="rfed-main"><div class="rfed-pane rfed-code"><div class="rfed-files" id="rfedFiles"></div>'
  +'<div class="rfed-body"><div class="rfed-tree" id="rfedTree"></div><div class="rfed-ed"><div class="rfed-gut" id="rfedGut"><div class="rfed-gin" id="rfedGin"></div></div><div class="rfed-sc"><pre class="rfed-hl" id="rfedHl" aria-hidden="true"><code id="rfedCode"></code></pre><textarea class="rfed-ta" id="rfedTa" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off" aria-label="Code editor text" readonly></textarea></div></div></div>'
